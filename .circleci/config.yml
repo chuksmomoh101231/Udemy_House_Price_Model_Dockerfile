@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  railway: railway/cli@3  # replace x.y.z with the current version
 jobs:
   build:
     docker:
@@ -13,12 +11,15 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       # Here you can run tests or any other pre-deployment steps
-      - railway/setup:
-          version: 'latest'
-      - railway/deploy:
-          project: $RAILWAY_PROJECT_ID
-          token: $RAILWAY_TOKEN
-          command: railway up --detach  # replace with your app's run command
+      - run:
+          name: Install Railway CLI
+          command: |
+            curl -sSL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
+      - run:
+          name: Deploy to Railway
+          command: |
+            echo $RAILWAY_TOKEN | railway login
+            railway up --detach
 workflows:
   version: 2
   build_and_deploy:

@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  railway: railway/cli@x.y.z  # replace x.y.z with the current version
+jobs:
+  build:
+    docker:
+      - image: 'cimg/python:3.8'  # replace with the Docker image that fits your needs
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      # Here you can run tests or any other pre-deployment steps
+      - railway/setup:
+          version: 'latest'
+      - railway/deploy:
+          project: $RAILWAY_PROJECT_ID
+          token: $RAILWAY_TOKEN
+          command: 'echo Deployed with CircleCI'  # replace with your app's run command
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build

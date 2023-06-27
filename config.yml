@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  railway: railway/cli@x.y.z  # replace x.y.z with the current version
+  railway: railway/cli@3  # replace x.y.z with the current version
 jobs:
   build:
     docker:
@@ -18,7 +18,7 @@ jobs:
       - railway/deploy:
           project: $RAILWAY_PROJECT_ID
           token: $RAILWAY_TOKEN
-          command: 'echo Deployed with CircleCI'  # replace with your app's run command
+          command: railway up --detach  # replace with your app's run command
 workflows:
   version: 2
   build_and_deploy:

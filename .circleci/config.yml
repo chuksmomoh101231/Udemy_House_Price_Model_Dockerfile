@@ -18,8 +18,8 @@ jobs:
       - run:
           name: Deploy to Railway
           command: |
-            echo $RAILWAY_TOKEN | railway login
-            railway up --detach $RAILWAY_PROJECT_ID
+            
+            railway up --detach
 workflows:
   version: 2
   build_and_deploy:

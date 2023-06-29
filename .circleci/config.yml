@@ -14,6 +14,7 @@ jobs:
           name: Install Railway CLI
           command: |
             curl -sSL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
+            echo 'export PATH=$HOME/.railway/bin:$PATH' >> $BASH_ENV
       - run:
           name: Deploy to Railway
           command: |
@@ -24,6 +25,11 @@ jobs:
       - image: 'cimg/python:3.8'  # replace with the Docker image that fits your needs
     steps:
       - checkout
+      - run:
+          name: Install Railway CLI
+          command: |
+            curl -sSL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
+            echo 'export PATH=$HOME/.railway/bin:$PATH' >> $BASH_ENV
       - run:
           name: Redeploy to Railway
           command: |

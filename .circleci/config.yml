@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   build:
     docker:
@@ -15,6 +14,12 @@ jobs:
           name: Install Railway CLI
           command: |
             curl -sSL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
+
+  deploy:
+    docker:
+      - image: 'cimg/python:3.8'  # replace with the Docker image that fits your needs
+    steps:
+      - checkout
       - run:
           name: Deploy to Railway
           command: |
@@ -24,7 +29,10 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build:
+      - build
+      - deploy:
+          requires:
+            - build
           filters:
             tags:
               only: /^v.*/

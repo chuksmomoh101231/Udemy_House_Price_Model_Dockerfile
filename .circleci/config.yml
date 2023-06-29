@@ -1,8 +1,13 @@
 version: 2.1
-jobs:
-  build:
+
+executors:
+  python-env:
     docker:
       - image: 'cimg/python:3.8'  # replace with the Docker image that fits your needs
+
+jobs:
+  build:
+    executor: python-env
     steps:
       - checkout
       - run:
@@ -18,10 +23,35 @@ jobs:
       - run:
           name: Deploy to Railway
           command: |
-            
             railway up --detach
+
+  deploy:
+    executor: python-env
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy to Railway
+          command: |
+            railway up --detach
+
 workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+

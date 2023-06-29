@@ -1,13 +1,9 @@
 version: 2.1
 
-executors:
-  python-env:
-    docker:
-      - image: 'cimg/python:3.8'  # replace with the Docker image that fits your needs
-
 jobs:
   build:
-    executor: python-env
+    docker:
+      - image: 'cimg/python:3.8'  # replace with the Docker image that fits your needs
     steps:
       - checkout
       - run:
@@ -15,7 +11,6 @@ jobs:
           command: |
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      # Here you can run tests or any other pre-deployment steps
       - run:
           name: Install Railway CLI
           command: |
@@ -25,30 +20,11 @@ jobs:
           command: |
             railway up --detach
 
-  deploy:
-    executor: python-env
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Deploy to Railway
-          command: |
-            railway up --detach
-
 workflows:
   version: 2
-  build_and_deploy:
+  build-and-deploy:
     jobs:
       - build:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - deploy:
-          requires:
-            - build
           filters:
             tags:
               only: /^v.*/

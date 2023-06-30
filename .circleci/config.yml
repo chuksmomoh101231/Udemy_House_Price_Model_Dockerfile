@@ -19,7 +19,9 @@ jobs:
       - run:
           name: Run Dockerfile
           command: |
-            docker run -d -p 8000:8000 myapp
+            CONTAINER_ID=$(docker run -d -p 8000:8000 myapp)
+            echo "Docker run command executed"
+            docker stop $CONTAINER_ID
   deploy:
     docker:
       - image: 'circleci/node:14'  # using Node.js image
@@ -39,8 +41,9 @@ jobs:
       - run:
           name: Run Dockerfile
           command: |
-            docker run -d -p 8000:8000 myapp
+            CONTAINER_ID=$(docker run -d -p 8000:8000 myapp)
             echo "Docker run command executed"
+            docker stop $CONTAINER_ID
       - run:
           name: Deploy to Railway
           command: |

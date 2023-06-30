@@ -16,12 +16,6 @@ jobs:
           name: Build Dockerfile
           command: |
             docker build -t myapp .
-      - run:
-          name: Run Dockerfile
-          command: |
-            CONTAINER_ID=$(docker run -d -p 8000:8000 myapp)
-            echo "Docker run command executed"
-            docker stop $CONTAINER_ID
   deploy:
     docker:
       - image: 'circleci/node:14'  # using Node.js image
@@ -34,16 +28,6 @@ jobs:
           command: |
             sudo npm install -g railway
             echo "RAILWAY_TOKEN=your-railway-token" >> $HOME/.railway
-      - run:
-          name: Build Dockerfile
-          command: |
-            docker build -t myapp .
-      - run:
-          name: Run Dockerfile
-          command: |
-            CONTAINER_ID=$(docker run -d -p 8000:8000 myapp)
-            echo "Docker run command executed"
-            docker stop $CONTAINER_ID
       - run:
           name: Deploy to Railway
           command: |

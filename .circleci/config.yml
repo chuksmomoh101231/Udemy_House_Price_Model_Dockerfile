@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Deploy to Railway
           command: |
-            railway deploy -p mixed-rabbits
+            railway up --detach
 
 workflows:
   version: 2

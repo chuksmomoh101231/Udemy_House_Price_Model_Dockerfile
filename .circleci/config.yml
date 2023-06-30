@@ -44,7 +44,7 @@ jobs:
           name: Deploy to Railway
           command: |
             echo "Starting deployment to Railway"
-            railway deploy -p mixed-rabbits
+            railway up --detach
             echo "Finished deployment to Railway"
 
 workflows:

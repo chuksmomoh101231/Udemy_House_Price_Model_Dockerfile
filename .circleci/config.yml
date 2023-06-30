@@ -40,7 +40,10 @@ jobs:
           name: Run and Deploy Dockerfile
           command: |
             docker run -d -p 8000:8000 myapp
-            railway up --detach
+      - run:
+          name: Deploy to Railway
+          command: |
+            railway deploy -p mixed-rabbits
 
 workflows:
   version: 2

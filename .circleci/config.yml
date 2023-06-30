@@ -37,13 +37,15 @@ jobs:
           command: |
             docker build -t myapp .
       - run:
-          name: Run and Deploy Dockerfile
+          name: Run Dockerfile
           command: |
             docker run -d -p 8000:8000 myapp
       - run:
           name: Deploy to Railway
           command: |
-            railway up --detach
+            echo "Starting deployment to Railway"
+            railway deploy -p mixed-rabbits
+            echo "Finished deployment to Railway"
 
 workflows:
   version: 2

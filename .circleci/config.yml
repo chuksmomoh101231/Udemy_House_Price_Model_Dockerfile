@@ -40,6 +40,7 @@ jobs:
           name: Run Dockerfile
           command: |
             docker run -d -p 8000:8000 myapp
+            echo "Docker run command executed"
       - run:
           name: Deploy to Railway
           command: |

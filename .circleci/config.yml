@@ -8,6 +8,12 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Install Railway
+          command: |
+            apk add curl
+            curl -sfL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
+            echo "RAILWAY_TOKEN=your-railway-token" >> $HOME/.railway
+      - run:
           name: Build Dockerfile
           command: |
             docker build -t myapp .
@@ -22,6 +28,12 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - run:
+          name: Install Railway
+          command: |
+            apk add curl
+            curl -sfL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
+            echo "RAILWAY_TOKEN=your-railway-token" >> $HOME/.railway
       - run:
           name: Build Dockerfile
           command: |
@@ -48,4 +60,3 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/   # Ignore all branches
-

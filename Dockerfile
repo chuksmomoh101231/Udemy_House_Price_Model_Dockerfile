@@ -19,4 +19,4 @@ COPY ["house_prediction_model-no_drop_features.pkl", "app_house_1.py", "./"] .
 EXPOSE 8000
 
 # Run command
-CMD ["uvicorn", "app_house_1.py:app", "--host", "0.0.0.0"]
+CMD ["uvicorn", "app_house_1:app", "--host", "0.0.0.0"]

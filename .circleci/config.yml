@@ -16,6 +16,10 @@ jobs:
           name: Build Dockerfile
           command: |
             docker build -t myapp .
+      - run:
+          name: Run Dockerfile
+          command: |
+            docker run -d -p 8000:8000 myapp
   deploy:
     docker:
       - image: 'circleci/node:14'  # using Node.js image
@@ -29,11 +33,41 @@ jobs:
             sudo npm install -g railway
             echo "RAILWAY_TOKEN=your-railway-token" >> $HOME/.railway
       - run:
+          name: Build Dockerfile
+          command: |
+            docker build -t myapp .
+      - run:
+          name: Run and Deploy Dockerfile
+          command: |
+            docker run -d -p 8000:8000 myapp
+      - run:
           name: Deploy to Railway
           command: |
-            echo "Starting deployment to Railway"
             railway up --detach
-            echo "Finished deployment to Railway"
+  redeploy:
+    docker:
+      - image: 'circleci/node:14'  # using Node.js image
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Railway
+          command: |
+            sudo npm install -g railway
+            echo "RAILWAY_TOKEN=your-railway-token" >> $HOME/.railway
+      - run:
+          name: Build Dockerfile
+          command: |
+            docker build -t myapp .
+      - run:
+          name: Run and Deploy Dockerfile
+          command: |
+            docker run -d -p 8000:8000 myapp
+      - run:
+          name: Deploy to Railway
+          command: |
+            railway up --detach
 
 workflows:
   version: 2
@@ -42,12 +76,20 @@ workflows:
       - build:
           filters:
             tags:
-              only: /.*/   # Allow all tags
+              only: /.*/  # Allow all tags
       - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              ignore: /.*/  # Ignore all tags
+            branches:
+              only: /.*/  # Allow all branches
+      - redeploy:
           requires:
             - build
           filters:
             tags:
               only: /^v.*/
             branches:
-              ignore: /.*/   # Ignore all branches
+              ignore: /.*/  # Ignore all branches
